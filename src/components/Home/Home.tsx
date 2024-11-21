@@ -32,7 +32,7 @@ const Home = () => {
         };
     
         fetchData();
-      }, [getAccessToken]);
+      }, []);
 
 
   return (
