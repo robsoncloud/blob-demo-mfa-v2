@@ -20,7 +20,7 @@ export const listContainersAndBlobs = async (accountName: string, token: string)
   return containers;
 };
 
-class AzureStorageBlobCredential implements TokenCredential {
+export default class AzureStorageBlobCredential implements TokenCredential {
   private token: string;
   private expiresAt: number;
 
