@@ -22,11 +22,11 @@ msalInstance.addEventCallback( (event: EventMessage) => {
 })
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  
     <MsalProvider instance={msalInstance} >
     <HashRouter>
       <App />
     </HashRouter>
     </MsalProvider>
-  </StrictMode>
+  
 );

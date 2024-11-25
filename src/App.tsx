@@ -6,16 +6,17 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import Nav from "./components/Nav";
-import Home from "./components/Home/Home";
-import Products from "./components/Products/Products";
+
+import Home from "./pages/Home/Home";
+import Products from "./pages/Products/Products";
 import { useEffect } from "react";
 import {
   AuthenticatedTemplate,
   UnauthenticatedTemplate,
   useIsAuthenticated,
 } from "@azure/msal-react";
-import Login from "./components/Login/Login";
+import Login from "./pages/Login/Login";
+import Nav from "./components/navbar/navbar";
 
 function App() {
   const IsAuthenticated = useIsAuthenticated();
@@ -30,9 +31,9 @@ function App() {
     }
   }, [IsAuthenticated]);
   return (
-    <div className="bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee] h-screen space-y-4">
+    <div className="bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee]  space-y-4">
       <Nav />
-      <main className="max-w-[1200px] mx-auto">
+      <main className="max-w-[1200px] mx-auto ">
         <AuthenticatedTemplate>
           <Routes>
             <Route path="/" element={<Home />} />
