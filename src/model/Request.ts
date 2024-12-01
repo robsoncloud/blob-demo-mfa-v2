@@ -2,6 +2,8 @@ import { TableEntity } from "@azure/data-tables";
 
 export interface Request extends TableEntity {
     ticket: string;
+    rowKey: string;
+    paritionKey: string;
     hostname: string;
     username: string;
     location: string;

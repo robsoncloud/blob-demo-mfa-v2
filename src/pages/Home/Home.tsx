@@ -10,9 +10,6 @@ import { columns } from "@/components/requests/requests-columns";
 import { Button } from "@/components/ui/button";
 
 
-
-
-
 const Home = () => {
 
   const [error, setError] = useState<string | null>(null);
@@ -26,14 +23,25 @@ const Home = () => {
   const featchEntities = async (pageSize: number, continuationToken?: string) => {
     setLoading(true)
     const token = await getAccessToken();
+    const options: ListTableEntitiesOptions = {
+     queryOptions:{
+      filter: "PartitionKey ge 'NAS' and PartitionKey lt 'NAT' and RowKey ge '000' and RowKey lt '001'"
+     }
+      // filter: "PartitionKey ge 'NAS' and PartitionKey lt 'NAT' and RowKey ge '000' and RowKey lt '001'"
+    };
+
     const tableClient = new TableClient(
+      
       "https://myownteststterraform.table.core.windows.net/", "RequestTable", new AzureStorageBlobCredential(token))
-    const iterator = tableClient.listEntities().byPage({ maxPageSize: pageSize, continuationToken })
+    const iterator = tableClient.listEntities(
+     options
+    ).byPage({ maxPageSize: pageSize, continuationToken })
 
     const { value } = await iterator.next()
 
     if (value) {
       setData(value)
+      console.log(value)
       setLoading(false)
       setHasNext(!!value.continuationToken); // Update if there's a next page
       return value.continuationToken
@@ -126,19 +134,10 @@ const Home = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <DataTable data={data} columns={columns} />
+        <DataTable data={data} />
 
       )}
 
-
-      {/* <div style={{ marginTop: "20px" }}>
-        <button disabled={loading || currentPage === 0} onClick={prevPage}>
-          Back
-        </button>
-        <button disabled={loading} onClick={nextPage}>
-          Next
-        </button>
-      </div> */}
 
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
