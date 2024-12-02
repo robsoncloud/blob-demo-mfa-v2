@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { useAzureStorageToken } from "../../utils/useAzureStorageToken"
-import { ListTableEntitiesOptions, TableClient, TableEntity, TableEntityResult } from "@azure/data-tables";
+import { ListTableEntitiesOptions, TableClient } from "@azure/data-tables";
 import AzureStorageBlobCredential from "../../utils/listContainersAndBlobs";
-import { Request } from "../../model/Request";
+
 import { DataTable } from "@/components/requests/requests-table";
-import { columns } from "@/components/requests/requests-columns";
+
 import { Button } from "@/components/ui/button";
+import { useRequestFilter } from "@/utils/useRequestFilter";
+import SearchBar from "@/components/search/search";
 
 
 const Home = () => {
@@ -19,22 +21,34 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [hasNext, setHasNext] = useState(true); // Tracks if there is a next page
-
+  const { filter, search } = useRequestFilter();
   const featchEntities = async (pageSize: number, continuationToken?: string) => {
     setLoading(true)
     const token = await getAccessToken();
+
+
+    let filterQuery = "PartitionKey ge 'NAS' and PartitionKey lt 'NAT' and RowKey ge '000' and RowKey lt '001'";
+
+    if (filter && search) {
+
+
+      filterQuery += ` and ${filter} gt '${search}' and ${filter} lt '${search}z'`
+
+    }
+
+    console.log(filterQuery)
+
     const options: ListTableEntitiesOptions = {
-     queryOptions:{
-      filter: "PartitionKey ge 'NAS' and PartitionKey lt 'NAT' and RowKey ge '000' and RowKey lt '001'"
-     }
-      // filter: "PartitionKey ge 'NAS' and PartitionKey lt 'NAT' and RowKey ge '000' and RowKey lt '001'"
+      queryOptions: {
+        filter: filterQuery
+      }
     };
 
     const tableClient = new TableClient(
-      
+
       "https://myownteststterraform.table.core.windows.net/", "RequestTable", new AzureStorageBlobCredential(token))
     const iterator = tableClient.listEntities(
-     options
+      options
     ).byPage({ maxPageSize: pageSize, continuationToken })
 
     const { value } = await iterator.next()
@@ -116,6 +130,8 @@ const Home = () => {
   };
 
 
+
+
   useEffect(() => {
     const loadFirstPage = async () => {
 
@@ -124,18 +140,22 @@ const Home = () => {
         setPageTokens([pageToken])
       }
     }
+    console.log("changed")
     loadFirstPage();
-  }, []);
+  }, [search]);
 
 
   return (
     <div>
       <h1>Storage Explorer</h1>
+      <SearchBar />
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <DataTable data={data} />
+        <>
 
+          <DataTable data={data} />
+        </>
       )}
 
 
@@ -152,7 +172,7 @@ const Home = () => {
           variant="outline"
           size="sm"
           onClick={nextPage}
-          disabled={loading||!hasNext}
+          disabled={loading || !hasNext}
         >
           Next
         </Button>

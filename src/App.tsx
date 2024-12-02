@@ -31,7 +31,7 @@ function App() {
     }
   }, [IsAuthenticated]);
   return (
-    <div className="bg-gradient-to-t from-[#fbc2eb] to-[#a6c1ee]  space-y-4">
+    <div className="bg-white  space-y-4">
       <Nav />
       <main className="max-w-[1200px] mx-auto ">
         <AuthenticatedTemplate>

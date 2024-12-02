@@ -24,6 +24,7 @@ import { useState } from "react"
 import AzureStorageBlobCredential from "@/utils/listContainersAndBlobs"
 import { ListTableEntitiesOptions, TableClient } from "@azure/data-tables"
 import { useAzureStorageToken } from "@/utils/useAzureStorageToken"
+import SearchBar from "../search/search"
 
 interface DataTableProps<TData> {
 
@@ -151,7 +152,10 @@ export function DataTable<TData>({
     })
 
     return (
+        <div className="flex flex-col gap-2">
+        
         <div className="rounded-md border bg-white/80">
+            
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -257,6 +261,7 @@ export function DataTable<TData>({
                     )}
                 </TableBody>
             </Table>
+        </div>
         </div>
     )
 }
