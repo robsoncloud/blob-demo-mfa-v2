@@ -146,8 +146,8 @@ const Home = () => {
 
 
   return (
-    <div>
-      <h1>Storage Explorer</h1>
+    <div className="flex flex-col gap-4">
+      
       <SearchBar />
       {loading ? (
         <p>Loading...</p>
